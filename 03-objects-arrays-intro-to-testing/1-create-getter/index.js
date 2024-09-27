@@ -6,15 +6,13 @@
 export function createGetter(path) {
     path = path.split('.')
     return (obj) => {
-        let current = {}
-        Object.assign(current, obj)
-        current.__proto__ = null
-        path.forEach((elem) => {
-            if (current == undefined) {
+        let current = obj        
+        for (const elem of path) {
+            if (current.hasOwnProperty(elem) === false) {
                 return
             }
-            current = current[elem]
-        })
+            current = current[elem]            
+        }
         return current
     }       
 }
