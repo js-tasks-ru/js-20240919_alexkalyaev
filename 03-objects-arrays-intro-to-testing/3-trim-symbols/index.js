@@ -5,22 +5,22 @@
  * @returns {string} - the new string without extra symbols according passed size
  */
 export function trimSymbols(string, size) {
-    if (size == 0) {
-        return ''
+  if (size == 0) {
+    return '';
+  }
+  let newStr = '';
+  let subStr = '';
+  for (let i = 0; i < string.length; i++) {
+    if (string[i] == subStr[0] && subStr.length == size) {
+      continue;
+    } else if (string[i] == subStr[0] && subStr.length < size) {
+      subStr += string[i];
+    } else if (string[i] != subStr[0]) {
+      newStr += subStr;
+      subStr = string[i];
     }
-    let newStr = ''
-    let subStr = ''
-    for(let i = 0; i < string.length; i++) {
-        if (string[i] == subStr[0] && subStr.length == size) {
-            continue
-        } else if (string[i] == subStr[0] && subStr.length < size) {
-            subStr +=string[i]
-        } else if (string[i] != subStr[0]) {
-            newStr += subStr
-            subStr = string[i]
-        }
-        else {return string}
-    }
-    newStr += subStr
-    return newStr
+    else {return string;}
+  }
+  newStr += subStr;
+  return newStr;
 }
