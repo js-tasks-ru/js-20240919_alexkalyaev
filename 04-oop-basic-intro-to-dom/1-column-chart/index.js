@@ -30,13 +30,13 @@ export default class ColumnChart {
             ${this.formatHeading(this.value)}
           </div>
           <div data-element="body" class="column-chart__chart">
-            ${this.createColumn(this.data)}
+            ${this.createColumnsTemplate(this.data)}
           </div>
         </div>
       </div>`
   }
 
-  createColumn(data) {
+  createColumnsTemplate(data) {
     const maxValue = Math.max(...data)
     return data.map(i => {
       const scale = this.chartHeight / maxValue
@@ -58,22 +58,22 @@ export default class ColumnChart {
     element.innerHTML = this.createTemplate()
     this.element = element.firstElementChild
     if (this.data.length) {
-      this.element.classList.remove('column-chart_loading');
+      this.element.classList.remove('column-chart_loading')
     }
     this.updateElements = this.getSubElements(this.element)
   }
 
     getSubElements(element) {
-      const elements = element.querySelectorAll('[data-element="body"]');
+      const elements = element.querySelectorAll('[data-element="body"]')
       let result = {}
-      for (let i of Array.from(elements)) {
+      for (const i of Array.from(elements)) {
           result[i.dataset.element] = element
       }
       return result
     }
 
   update(data) {
-    this.updateElements.body.innerHTML = this.createColumn(data)
+    this.updateElements.body.innerHTML = this.createColumnsTemplate(data)
   }
 
   remove() {
