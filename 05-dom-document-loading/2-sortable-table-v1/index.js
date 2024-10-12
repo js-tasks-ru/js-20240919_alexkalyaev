@@ -36,9 +36,8 @@ export default class SortableTable {
     return div;
   }
 
-
   render() {
-    const elemHtmlCode = this.createElement(`
+    const elem = this.createElement(`
       <div data-element="productsContainer" class="products-list__container">
         <div class="sortable-table">
           ${this.createHeaderTemplate()}
@@ -47,6 +46,41 @@ export default class SortableTable {
           </div>
         </div>
       </div>`).firstElementChild;
-    this.element = elemHtmlCode;
+    this.element = elem;
+    this.subElements = this.getSubElements()
   }
+
+  getSubElements() {
+    const elements = this.element.querySelectorAll('[data-element]')
+    let result = {}
+    for (const i of Array.from(elements)) {
+      result[i.dataset.element] = i
+    }
+
+    return result
+  }
+
+  sort(fieldValue, param = 'asc') {
+    let order = param === 'asc' ? 1 : -1
+    
+    this.data = [...this.data].sort((a, b) => {
+      if (typeof a[fieldValue] === 'number' && typeof b[fieldValue] === 'number') {
+        return order * (a[fieldValue] - b[fieldValue])
+      }
+      else if (typeof a[fieldValue] === 'string' && typeof b[fieldValue] === 'string') {
+        return order * a[fieldValue].localeCompare(b[fieldValue], ['ru', 'en'], { caseFirst: 'upper' })
+      }
+      return 0
+    })
+    this.subElements.body.innerHTML = this.createTableTemplate()
+  }
+
+  remove() {
+    this.element.remove()
+  }
+
+  destroy() {
+    this.remove()
+  }
+
 }
