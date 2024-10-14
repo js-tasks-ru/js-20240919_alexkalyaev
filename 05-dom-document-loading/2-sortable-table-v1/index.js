@@ -61,19 +61,13 @@ export default class SortableTable {
   }
 
   sort(fieldValue, param = 'asc') {
-    const order = param === 'asc' ? 1 : -1
-    const sortType = (fieldValue) => {
-      for (const i of this.headerConfig) {
-        if (i['id'] === fieldValue) {
-          return i['sortType']
-        }
-      }
-    }  
+    const order = param === 'asc' ? 1 : -1 
+    const sortType = this.headerConfig.find(prop => prop.id === fieldValue).sortType
     this.data = [...this.data].sort((a, b) => {
-      if (sortType(fieldValue) === 'number') {
+      if (sortType === 'number') {
         return order * (a[fieldValue] - b[fieldValue])
       }
-      else if (sortType(fieldValue) === 'string') {
+      else if (sortType === 'string') {
         return order * a[fieldValue].localeCompare(b[fieldValue], ['ru', 'en'], { caseFirst: 'upper' })
       }
       return 0
