@@ -2,7 +2,7 @@ export default class SortableTable {
   constructor(headerConfig = [], data = []) {
     this.headerConfig = headerConfig
     this.data = data
-    this.render()
+    this.createTable()
   }
 
   createHeaderTemplate() {
@@ -36,12 +36,12 @@ export default class SortableTable {
     return div;
   }
 
-  render() {
+  createTable() {
     const elem = this.createElement(`
       <div data-element="productsContainer" class="products-list__container">
         <div class="sortable-table">
           ${this.createHeaderTemplate()}
-          <div data-element="body" class="sortable-table__body">
+          <div data-element="body" classs="sortable-table__body">
             ${this.createTableTemplate()}
           </div>
         </div>
@@ -52,7 +52,7 @@ export default class SortableTable {
 
   getSubElements() {
     const elements = this.element.querySelectorAll('[data-element]')
-    let result = {}
+    const result = {}
     for (const i of Array.from(elements)) {
       result[i.dataset.element] = i
     }
@@ -61,13 +61,19 @@ export default class SortableTable {
   }
 
   sort(fieldValue, param = 'asc') {
-    let order = param === 'asc' ? 1 : -1
-    
+    const order = param === 'asc' ? 1 : -1
+    const sortType = (fieldValue) => {
+      for (const i of this.headerConfig) {
+        if (i['id'] === fieldValue) {
+          return i['sortType']
+        }
+      }
+    }  
     this.data = [...this.data].sort((a, b) => {
-      if (typeof a[fieldValue] === 'number' && typeof b[fieldValue] === 'number') {
+      if (sortType(fieldValue) === 'number') {
         return order * (a[fieldValue] - b[fieldValue])
       }
-      else if (typeof a[fieldValue] === 'string' && typeof b[fieldValue] === 'string') {
+      else if (sortType(fieldValue) === 'string') {
         return order * a[fieldValue].localeCompare(b[fieldValue], ['ru', 'en'], { caseFirst: 'upper' })
       }
       return 0
